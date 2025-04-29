@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Cart</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #212121;
+        padding: 16px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+
+      .section {
+        background-color: white;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .quick-basket {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .quick-basket-title {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .delivery-time {
+        font-size: 12px;
+        color: #757575;
+        margin-bottom: 12px;
+      }
+
+      .item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .item:last-child {
+        border-bottom: none;
+      }
+
+      .item-name {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .item-price {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+
+      .seller {
+        font-size: 12px;
+        color: #757575;
+        margin-bottom: 8px;
+      }
+
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .qty-btn {
+        padding: 4px 10px;
+        background-color: #eee;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .qty-count {
+        font-size: 14px;
+        font-weight: 500;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .payment-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .payment-label {
+        color: #616161;
+      }
+
+      .payment-value {
+        font-weight: 500;
+      }
+
+      .discount {
+        color: #388e3c;
+      }
+
+      .total-row {
+        font-weight: 600;
+        margin: 12px 0;
+      }
+
+      .savings {
+        color: #388e3c;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: right;
+        margin-top: 8px;
+      }
+
+      .place-order-btn,
+      #clear-cart-btn {
+        background-color: #ff9f00;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      #clear-cart-btn {
+        background-color: #d32f2f;
+      }
+
+      .divider {
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 12px 0;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .modal-content h2 {
+        margin-bottom: 16px;
+      }
+
+      .modal-content input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      .modal-content button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      #submit-order-btn {
+        background-color: #28a745;
+        color: white;
+      }
+
+      #cancel-order-btn {
+        background-color: #d32f2f;
+        color: white;
+        margin-left: 8px;
+      }
+
+      /* Basic Modal Styles */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dark background with transparency */
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Modal Content */
+      .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+        max-width: 100%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1001; /* Ensure modal content is above the background */
+      }
+
+      /* Heading */
+      .modal-content h2 {
+        margin: 0 0 20px;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      /* Input Fields */
+      .modal-content input,
+      .modal-content textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      /* Textarea styles */
+      .modal-content textarea {
+        height: 100px;
+      }
+
+      /* Buttons Container */
+      .modal-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      /* Button Styles */
+      .modal-buttons button {
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      /* Submit Button */
+      #modal-submit-btn {
+        background-color: #28a745;
+        color: white;
+      }
+
+      #modal-submit-btn:hover {
+        background-color: #218838;
+      }
+
+      /* Cancel Button */
+      #modal-cancel-btn {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      #modal-cancel-btn:hover {
+        background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>My Cart</h1>
+
+    <!-- Cart Section -->
+    <div class="section" id="cart-section" style="display: none">
+      <div class="quick-basket">
+        <span class="quick-basket-title">Quick Basket</span>
+        <span class="quick-basket-title" id="item-count"></span>
+      </div>
+      <div class="delivery-time">Delivery in 10 to 30 mins</div>
+      <div id="cart-items"></div>
+    </div>
+
+    <!-- Payment Section -->
+    <div class="section" id="payment-section" style="display: none">
+      <h2 style="font-size: 16px; margin-bottom: 12px; font-weight: 600">
+        Payment Details
+      </h2>
+      <div class="payment-row">
+        <span class="payment-label">MRP Total</span>
+        <span class="payment-value" id="mrp-total">¥0.00</span>
+      </div>
+      <div class="payment-row">
+        <span class="payment-label">Product Discount</span>
+        <span class="payment-value discount" id="discount">- ¥0.00</span>
+      </div>
+      <div class="payment-row">
+        <span class="payment-label">Delivery Fee (Quick)</span>
+        <span class="payment-value">FREE</span>
+      </div>
+      <div class="payment-row">
+        <span class="payment-label">Delivery Fee (Scheduled)</span>
+        <span class="payment-value">FREE</span>
+      </div>
+      <div class="payment-row total-row">
+        <span>Total</span>
+        <span id="total">¥0.00</span>
+      </div>
+      <div class="savings" id="savings">You Saved ¥0.00</div>
+    </div>
+
+    <!-- Buttons -->
+    <button class="place-order-btn" id="place-order-btn" style="display: none">
+      Place Order
+    </button>
+    <button id="clear-cart-btn" style="display: none">Clear Cart</button>
+
+    <!-- Continue Shopping Button -->
+    <button
+      id="continue-shopping-btn"
+      style="display: none; background-color: #1976d2"
+      class="place-order-btn"
+    >
+      Continue Shopping
+    </button>
+
+    <script>
+      function formatCurrency(value) {
+        return "¥" + value.toFixed(2);
+      }
+
+      function updateLocalStorage(cartData) {
+        localStorage.setItem("cart", JSON.stringify(cartData));
+      }
+
+      function updateQuantity(index, change) {
+        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+        const item = cartData[index];
+        item.qty = Math.max(1, (item.qty || 1) + change);
+        updateLocalStorage(cartData);
+        renderCart();
+      }
+
+      function renderCart() {
+        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartItemsContainer = document.getElementById("cart-items");
+        const itemCount = document.getElementById("item-count");
+        const mrpTotal = document.getElementById("mrp-total");
+        const discount = document.getElementById("discount");
+        const total = document.getElementById("total");
+        const savings = document.getElementById("savings");
+        const cartSection = document.getElementById("cart-section");
+        const paymentSection = document.getElementById("payment-section");
+        const placeOrderBtn = document.getElementById("place-order-btn");
+        const clearCartBtn = document.getElementById("clear-cart-btn");
+        const continueShoppingBtn = document.getElementById(
+          "continue-shopping-btn"
+        );
+
+        // Handle empty cart
+        if (cartData.length === 0) {
+          cartSection.style.display = "none";
+          paymentSection.style.display = "none";
+          placeOrderBtn.style.display = "none";
+          clearCartBtn.style.display = "none";
+          continueShoppingBtn.style.display = "block";
+          return;
+        }
+
+        // Show sections
+        cartSection.style.display = "block";
+        paymentSection.style.display = "block";
+        placeOrderBtn.style.display = "block";
+        clearCartBtn.style.display = "block";
+        continueShoppingBtn.style.display = "none";
+
+        cartItemsContainer.innerHTML = "";
+        let totalPrice = 0;
+        let itemTotalCount = 0;
+
+        cartData.forEach((item, index) => {
+          item.qty = item.qty || 1;
+          itemTotalCount += item.qty;
+          totalPrice += item.price * item.qty;
+
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "item";
+
+          itemDiv.innerHTML = `
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">${formatCurrency(
+              item.price * item.qty
+            )}</div>
+            <div class="seller">Sold by: NA</div>
+            <div class="quantity-controls">
+              <button class="qty-btn" onclick="updateQuantity(${index}, -1)">−</button>
+              <span class="qty-count">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+          `;
+
+          cartItemsContainer.appendChild(itemDiv);
+
+          if (index < cartData.length - 1) {
+            const divider = document.createElement("div");
+            divider.className = "divider";
+            cartItemsContainer.appendChild(divider);
+          }
+        });
+
+        itemCount.textContent = `${itemTotalCount} item(s)`;
+
+        const discounted = totalPrice * 0.5;
+        mrpTotal.textContent = formatCurrency(totalPrice);
+        discount.textContent = "- " + formatCurrency(totalPrice * 0.5);
+        total.textContent = formatCurrency(discounted);
+        savings.textContent = "You Saved " + formatCurrency(totalPrice * 0.5);
+      }
+
+      function clearCart() {
+        localStorage.removeItem("cart");
+        renderCart();
+      }
+
+      document
+        .getElementById("clear-cart-btn")
+        .addEventListener("click", clearCart);
+      document
+        .getElementById("continue-shopping-btn")
+        .addEventListener("click", () => {
+          window.location.href = "products.html";
+        });
+
+      renderCart();
+      ///////////////////////////////////////////////////
+    
+      document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("order-modal");
+        const placeOrderBtn = document.getElementById("place-order-btn");
+        const modalSubmitBtn = document.getElementById("modal-submit-btn");
+        const modalCancelBtn = document.getElementById("modal-cancel-btn");
+
+        function getCookie(name) {
+          const match = document.cookie.match(
+            new RegExp("(^| )" + name + "=([^;]+)")
+          );
+          return match ? match[2] : null;
+        }
+
+        placeOrderBtn.addEventListener("click", () => {
+          const token = getCookie("token");
+          if (!token) {
+            alert("You must be logged in to place an order.");
+            return;
+          }
+
+          try {
+            const decoded = jwt_decode(token);
+            document.getElementById("order-username").value = decoded.username;
+          } catch (err) {
+            alert("Invalid token. Please log in again.");
+            return;
+          }
+
+          modal.style.display = "flex";
+        });
+
+        modalCancelBtn.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
+
+        modalSubmitBtn.addEventListener("click", async () => {
+          debugger;
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          if (cart.length === 0) return alert("Cart is empty.");
+
+          const token = getCookie("token");
+          const username = document.getElementById("order-username").value;
+          const contact = document.getElementById("order-contact").value.trim();
+          const address = document.getElementById("order-address").value.trim();
+
+          if (!contact || !address) return alert("Please fill all fields.");
+
+          let totalQuantity = 0;
+          let totalAmount = 0;
+          const items = cart.map((item) => {
+            totalQuantity += item.qty || 1;
+            totalAmount += item.price * (item.qty || 1);
+
+            return {
+              productId: item.id,
+              name: item.name, 
+              price: item.price, 
+              imageId: item.imageId, 
+              quantity: item.qty || 1, 
+            };
+          });
+
+          try {
+            await axios.post(
+              "http://localhost:5001/orderdetail",
+              {
+                Username: username,
+                Contact: contact,
+                Address: address,
+                Quantity: totalQuantity,
+                TotalAmount: totalAmount,
+                ProductDetails: items,
+                ModeOfPayment: "CASH",
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            alert("Order placed successfully!");
+            localStorage.removeItem("cart");
+            modal.style.display = "none";
+            renderCart();
+          } catch (error) {
+            console.error(error);
+            alert("Error placing order.");
+          }
+        });
+      });
+
+      ////////////////////
+    </script>
+
+    <!-- Order Modal -->
+    <div id="order-modal" class="modal">
+      <div class="modal-content">
+        <h2>Confirm Your Order</h2>
+        <input id="order-username" type="text" readonly />
+        <input id="order-contact" type="text" placeholder="Contact Number" />
+        <textarea id="order-address" placeholder="Delivery Address"></textarea>
+
+        <div class="modal-buttons">
+          <button id="modal-submit-btn">Submit Order</button>
+          <button id="modal-cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

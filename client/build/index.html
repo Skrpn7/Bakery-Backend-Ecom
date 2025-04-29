@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      window.apiUrl = 'http://localhost:5001';
+    </script>
+    <!--=============== FAVICON ===============-->
+    <link
+      rel="shortcut icon"
+      href="assets/img/favicon.png"
+      type="image/x-icon"
+    />
+
+    <!--=============== REMIXICONS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.7.0/remixicon.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <title>Roshan's Bakery</title>
+  </head>
+  <body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+      <nav class="nav container">
+        <img src="./assets/img/logo11.png" alt="logo" class="nav__logo">
+        <div class="nav__menu" id="nav-menu">
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a href="#home" class="nav__link active-link">Home</a>
+            </li>
+
+            <li class="nav__item">
+              <a href="#news" class="nav__link">News</a>
+            </li>
+
+            <li class="nav__item">
+              <a href="#about" class="nav__link">About Us</a>
+            </li>
+
+            
+
+            <li class="nav__item">
+              <a href="#visit" class="nav__link">Location</a>
+            </li>
+
+            <li class="nav__item" id="auth-button-container">
+              <!-- Button will be inserted by JS -->
+            </li>
+            
+
+          </ul>
+
+          <!--close button-->
+          <div class="nav__close" id="nav-close">
+            <i class="ri-close-line"></i>
+          </div>
+
+          <img src="assets/img/bread-4.png" alt="image" class="nav__img-1" />
+          <img src="assets/img/bread-1.png" alt="image" class="nav__img-2" />
+        </div>
+        <!--Toggle button-->
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="ri-menu-line"></i>
+        </div>
+      </nav>
+    </header>
+
+    <!--==================== MAIN ====================-->
+    <main class="main">
+      <!--==================== HOME ====================-->
+      <section class="home section" id="home">
+        
+        <div class="home__shadow"></div>
+
+        <div class="home__container container grid">
+          <div class="home__data">
+            <h1 class="home__title">
+              Select The Best <br />
+              Quality Breads
+            </h1>
+
+            <a href="pages/products.html" class="button">Select Breads</a>
+
+            <img src="assets/img/bread-1.png" alt="image" class="home__bread" />
+          </div>
+          <div class="slider-wrapper home__image">
+            <div class="slider">
+              <img src="assets/img/IMG_20240722_102251.jpg" alt="Image 1">
+              <img src="assets/img/cookies_7.jpg" alt="Image 2">
+              <img src="assets/img/cookies_4.jpg" alt="Image 3">
+              <img src="assets/img/cookies_3.jpg" alt="Image 4">
+            </div>
+            </div>
+            
+            <h1 class="section__title">
+              I Bake It , You Take It
+      
+            </h1>
+
+          <footer class="home__footer">
+            <div class="home__location">
+              <a href="https://maps.app.goo.gl/jTpF9gKHGATqpQhh7" target="_blank">
+              <i class="ri-map-pin-line"></i>
+              <span>Raipur ,Chattisgarh</span>
+            </a>
+            </div>
+
+            <div class="home__social">
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-facebook-fill"></i>
+              </a>
+
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-instagram-line"></i>
+              </a>
+
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-youtube-line"></i>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </section>
+
+      <!--==================== NEWS ====================-->
+      <section class="new section" id="news">
+        <h2 class="section__title">New Breads</h2>
+
+        <div class="new__container container grid">
+          <div class="new__content grid">
+            <article class="new__card">
+              <div class="new__data">
+                <h2 class="new__title">Sandwich Bread</h2>
+                <p class="new__description">
+                  Baked with healthy, wheat flour, Milk, Gluten for good nutrition.
+                </p>
+              </div>
+
+              <img
+                src="assets/img/b1.png"
+                alt="image"
+                class="new__img nimage"
+              />
+            </article>
+
+            <article class="new__card">
+              <div class="new__data">
+                <h2 class="new__title">Tasty Bread</h2>
+                <p class="new__description">
+                  Tasty and homemade prepared from organic yeast-free flour.
+                </p>
+              </div>
+
+              <img
+                src="assets/img/b6.png"
+                alt="image"
+                class="new__img nimage"
+              />
+            </article>
+
+            <article class="new__card">
+              <div class="new__data">
+                <h2 class="new__title">Brown Bread</h2>
+                <p class="new__description">
+                  Tasty and made with different natural grains from the
+                  countryside.
+                </p>
+              </div>
+
+              <img
+                src="assets/img/brown-bread.png"
+                alt="image"
+                class="new__img"
+              />
+            </article>
+          </div>
+
+          <a href="pages/products.html" class="new__button button">See More Breads</a>
+        </div>
+      </section>
+
+      <!--==================== ABOUT ====================-->
+      <section class="about section" id="about">
+        <div class="about__container container grid">
+          <div class="about__data">
+            <h2 class="section__title">About Us</h2>
+
+            <p class="about__description">
+              We prepare all types of bread that are made at home, maintaining
+              the tradition of using only the best ingredients made with local
+              products whenever possible. We have an extensive line of freshly
+              prepared bakery and coffee products.
+            </p>
+
+            <a href="pages/about.html" class="button">Know More</a>
+
+            <img
+              src="assets/img/bread-2.png"
+              alt="image"
+              class="about__bread"
+            />
+          </div>
+
+          <img
+            src="assets/img/about-bread.png"
+            alt="image"
+            class="about__img"
+          />
+        </div>
+      </section>
+
+      
+      
+
+      <!--==================== VISIT ====================-->
+      <section class="visit section" id="visit">
+        <div class="visit__container">
+          <img src="assets/img/visit-bg.jpg" alt="" class="visit__bg" />
+          <div class="visit__shadow"></div>
+          <div class="visit__content container grid"></div>
+          <div class="visit__data">
+            <h2 id="visit__title">Visit Us</h2>
+
+            <p id="visit__description">
+              Discover the best bread, we look forward to your visit.
+            </p>
+
+            <a href="pages/location.html" class="button">See Location</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!--==================== FOOTER ====================-->
+    <footer class="footer">
+      <div class="footer__container container grid">
+        <div>
+          <img src="assets/img/logo11.png" alt="logo" class="nav__logo">
+          <p class="footer__description">
+            We make the best bread <br />
+            in the city.
+          </p>
+        </div>
+
+        <div class="footer__content grid">
+          <div>
+            <h3 class="footer__title">Address</h3>
+
+            <ul class="footer__list">
+              <li>
+                <address class="footer__info">
+                  Mfg.& Mktd. By: MAA LAXMI FOODS <br>
+Plot No. 210, Birkoni Indl. <br> Area Mahasamund, Chhattisgarh
+                </address>
+              </li>
+
+              <li>
+                <address class="footer__info">9AM - 11PM</address>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="footer__title">Contact Me</h3>
+
+            <ul class="footer__list">
+              <li>
+                <address class="footer__info">maalaxmifoods2017@gmail.com</address>
+              </li>
+
+              <li>
+                <address class="footer__info">+91 903-100-9897</address>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="footer__title">Follow Us</h3>
+
+            <div class="footer__social">
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-facebook-fill"></i>
+              </a>
+
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-instagram-line"></i>
+              </a>
+
+              <a href="https://www.instagram.com/bakerncaker?igsh=ZmlsbHBnNGFmZ2Ex" target="_blank">
+                <i class="ri-youtube-fill"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <img src="assets/img/bread-4.png" alt="image" class="footer__img-1" />
+        <img src="assets/img/bread-3.png" alt="image" class="footer__img-2" />
+      </div>
+
+      <span class="footer__copy"> &#169; All Rights Reserved </span>
+    </footer>
+
+    <!--========== SCROLL UP ==========-->
+    <a href="" class="scrollup" id="scroll-up">
+      <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!--=============== SCROLLREVEAL ===============-->
+    
+
+    <!--=============== MAIN JS ===============-->
+    <script src="assets/js/main.js"></script>
+    <script>
+      // Function to check if any cookie is available
+      function isUserLoggedIn() {
+        return document.cookie.split(';').some((cookie) => cookie.trim().startsWith('token='));
+        // ^ Replace 'your_cookie_name' with your actual cookie's name if you know it!
+      }
+    
+      // Function to show Logout or Login button
+      function setupAuthButton() {
+        const authButtonContainer = document.getElementById('auth-button-container');
+    
+        if (isUserLoggedIn()) {
+          // If logged in, show Logout
+          authButtonContainer.innerHTML = `
+            <button id="logout-btn" class="nav__link" style="background:none; border:none; cursor:pointer;">Logout</button>
+          `;
+    
+          document.getElementById('logout-btn').addEventListener('click', function () {
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) {
+              document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+    
+            // Show success alert
+            Swal.fire({
+              icon: 'success',
+              title: 'Logged out!',
+              text: 'You have been successfully logged out.',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = '/'; 
+              }
+            });
+          });
+    
+        } else {
+          // If not logged in, show Login
+          authButtonContainer.innerHTML = `
+            <a href="/pages/login.html" class="nav__link">Login</a>
+          `;
+        }
+      }
+    
+      // Run on page load
+      setupAuthButton();
+    </script>
+    
+    
+  </body>
+</html>

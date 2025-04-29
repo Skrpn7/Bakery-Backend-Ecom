@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - RBakery</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url("../assets/img/visit-bg.jpg") no-repeat center
+          center/cover;
+        font-family: Arial, sans-serif;
+      }
+      .login-container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        width: 550px;
+        text-align: center;
+      }
+      .login-container h2 {
+        margin-bottom: 20px;
+        color: #ff8800;
+      }
+      .login-container input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+      .login-container button {
+        width: 100%;
+        padding: 12px;
+        background: #ff8800;
+        border: none;
+        color: white;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .login-container button:hover {
+        background: #e67e00;
+      }
+      .login-container a {
+        display: block;
+        margin-top: 12px;
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+      }
+      .login-container a:hover {
+        text-decoration: underline;
+      }
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        height: 120px;
+        width: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="../assets/img/logo11.png" alt="RBakery Logo" class="logo" />
+    <div class="login-container">
+      <h2>Welcome to Baker 'N' Caker</h2>
+      <input type="text" placeholder="Email or Username" id="username" />
+      <input type="password" placeholder="Password" id="password" />
+      <button onclick="login()">Login</button>
+      <a href="#">Forgot Password?</a>
+      <a href="javascript:void(0)" onclick="createNewCustomer()">Sign Up</a>
+    </div>
+
+    <script>
+      async function createNewCustomer() {
+        try {
+          const { value: formValues } = await Swal.fire({
+            title: "Create New Account",
+            html:
+              '<input id="swal-input1" class="swal2-input" placeholder="Username">' +
+              '<input id="swal-input2" type="password" class="swal2-input" placeholder="Password">' +
+              '<input id="swal-input3" type="email" class="swal2-input" placeholder="Email">' +
+              '<input id="swal-input4" class="swal2-input" placeholder="Address">',
+            focusConfirm: false,
+            preConfirm: () => {
+              const username = document.getElementById("swal-input1").value;
+              const password = document.getElementById("swal-input2").value;
+              const email = document.getElementById("swal-input3").value;
+              const address = document.getElementById("swal-input4").value;
+
+              if (!username || !password || !email || !address) {
+                Swal.showValidationMessage(`Please fill out all fields`);
+                return false;
+              }
+
+              return [username, password, email, address];
+            },
+          });
+
+          if (formValues) {
+            const [Username, Password, Email, Address] = formValues;
+
+            await axios.post(`http://localhost:5001/admin/CreateUser`, {
+              Username,
+              Password,
+              Email,
+              Address,
+              Role: "Client",
+            });
+
+            // Success - immediately show another SweetAlert
+            Swal.fire({
+              icon: "success",
+              title: "Account Created!",
+              text: "You can now login and add items to your cart.",
+              confirmButtonText: "Login",
+            }).then(() => {
+              // After user clicks Login in success modal, redirect
+              window.location.href = "../pages/login.html";
+            });
+          }
+        } catch (error) {
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to create account. Please try again.",
+          });
+        }
+      }
+
+      async function login() {
+        const email = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const loginData = {
+          Email: email,
+          Password: password,
+        };
+
+        try {
+          const response = await axios.post(
+            "http://localhost:5001/admin/Login",
+            loginData
+          );
+
+          const token = response.data.Result.token;
+          const username = response.data.Result.username;
+          localStorage.setItem("username", username);
+          document.cookie = `token=${token}; path=/; secure; SameSite=Lax`;
+
+          // SweetAlert success
+          Swal.fire({
+            icon: "success",
+            title: "Login Successful",
+            text: "Welcome back!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+
+          setTimeout(() => {
+            window.location.href = "../index.html";
+          }, 2000);
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Login Failed",
+            text: "Invalid username or password",
+          });
+          console.error("Login error:", error);
+        }
+      }
+    </script>
+  </body>
+</html>
