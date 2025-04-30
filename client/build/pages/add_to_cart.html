@@ -321,11 +321,11 @@
       </h2>
       <div class="payment-row">
         <span class="payment-label">MRP Total</span>
-        <span class="payment-value" id="mrp-total">¥0.00</span>
+        <span class="payment-value" id="mrp-total">₹0.00</span>
       </div>
       <div class="payment-row">
         <span class="payment-label">Product Discount</span>
-        <span class="payment-value discount" id="discount">- ¥0.00</span>
+        <span class="payment-value discount" id="discount">- ₹0.00</span>
       </div>
       <div class="payment-row">
         <span class="payment-label">Delivery Fee (Quick)</span>
@@ -337,9 +337,9 @@
       </div>
       <div class="payment-row total-row">
         <span>Total</span>
-        <span id="total">¥0.00</span>
+        <span id="total">₹0.00</span>
       </div>
-      <div class="savings" id="savings">You Saved ¥0.00</div>
+      <div class="savings" id="savings">You Saved ₹0.00</div>
     </div>
 
     <!-- Buttons -->
@@ -359,7 +359,7 @@
 
     <script>
       function formatCurrency(value) {
-        return "¥" + value.toFixed(2);
+        return "₹" + value.toFixed(2);
       }
 
       function updateLocalStorage(cartData) {
@@ -386,6 +386,10 @@
         const paymentSection = document.getElementById("payment-section");
         const placeOrderBtn = document.getElementById("place-order-btn");
         const clearCartBtn = document.getElementById("clear-cart-btn");
+        document.getElementById("discount").parentElement.style.display =
+          "none";
+        document.getElementById("savings").style.display = "none";
+
         const continueShoppingBtn = document.getElementById(
           "continue-shopping-btn"
         );
@@ -443,11 +447,15 @@
 
         itemCount.textContent = `${itemTotalCount} item(s)`;
 
-        const discounted = totalPrice * 0.5;
+        // const discounted = totalPrice * 0.5;
+        // mrpTotal.textContent = formatCurrency(totalPrice);
+        // discount.textContent = "- " + formatCurrency(totalPrice * 0.5);
+        // total.textContent = formatCurrency(discounted);
+        // savings.textContent = "You Saved " + formatCurrency(totalPrice * 0.5);
         mrpTotal.textContent = formatCurrency(totalPrice);
-        discount.textContent = "- " + formatCurrency(totalPrice * 0.5);
-        total.textContent = formatCurrency(discounted);
-        savings.textContent = "You Saved " + formatCurrency(totalPrice * 0.5);
+        discount.textContent = "- ₹0.00";
+        total.textContent = formatCurrency(totalPrice);
+        savings.textContent = "";
       }
 
       function clearCart() {
@@ -466,7 +474,7 @@
 
       renderCart();
       ///////////////////////////////////////////////////
-    
+
       document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("order-modal");
         const placeOrderBtn = document.getElementById("place-order-btn");
@@ -522,10 +530,11 @@
 
             return {
               productId: item.id,
-              name: item.name, 
-              price: item.price, 
-              imageId: item.imageId, 
-              quantity: item.qty || 1, 
+              name: item.name,
+              price: item.price,
+              imageId: item.imageId,
+              type: item.type,
+              quantity: item.qty || 1,
             };
           });
 
